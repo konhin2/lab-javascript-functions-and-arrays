@@ -8,36 +8,52 @@ function maxOfTwoNumbers(a, b) {
 // Iteration #2: Find longest word
 const words = ['mystery', 'brother', 'aviator', 'crocodile', 'pearl', 'orchard', 'crackpot'];
 
-function findLongestWord() {}
+function findLongestWord(arrayWords) {
+  return arrayWords != 0 ? arrayWords.reduce((acc, elem) => acc.length >= elem.length ? acc : elem) : null
+}
 
 
 
 // Iteration #3: Calculate the sum
 const numbers = [6, 12, 1, 18, 13, 16, 2, 1, 8, 10];
 
-function sumNumbers() {}
+function sumNumbers(arrayNums) {
+  return arrayNums != 0 ? arrayNums.reduce((acc, elem) => acc + elem) : 0
+}
 
 
 
 // Iteration #3.1 Bonus:
-function sum() {}
+const mixedArr = [6, 12, 'miami', 1, true, 'barca', '200', 'lisboa', 8, 10];
 
-
+function sum(mixedArray) {
+  return mixedArray.reduce((acc, elem) => {
+    if (typeof elem === 'number' || typeof elem === 'boolean') return acc + elem
+    else if (typeof elem === 'string')return acc + elem.length 
+    throw new Error("Unsupported data type sir or ma'am")
+  },0)
+}
 
 // Iteration #4: Calculate the average
 // Level 1: Array of numbers
 const numbersAvg = [2, 6, 9, 10, 7, 4, 1, 9];
 
-function averageNumbers() {}
+function averageNumbers(arrayNums) {
+  return arrayNums != 0 ? arrayNums.reduce((acc, elem) => acc + elem) / arrayNums.length : null
+}
 
 
 // Level 2: Array of strings
 const wordsArr = ['seat', 'correspond', 'linen', 'motif', 'hole', 'smell', 'smart', 'chaos', 'fuel', 'palace'];
 
-function averageWordLength() { }
+function averageWordLength(arrayW) {
+  return arrayW != 0 ? arrayW.reduce((acc, elem) => acc + elem.length, 0) / arrayW.length : null
+}
 
 // Bonus - Iteration #4.1
-function avg() {}
+function avg(mixedArray) {
+  return mixedArray != 0 ? Number((sum(mixedArray) / mixedArray.length).toFixed(2)) : null
+}
 
 // Iteration #5: Unique arrays
 const wordsUnique = [
@@ -54,14 +70,20 @@ const wordsUnique = [
   'bring'
 ];
 
-function uniquifyArray() {}
-
-
+function uniquifyArray(words) {
+  return words != 0 ? words.reduce((acc, elem) => {
+    if(acc.includes(elem)) return acc
+    acc.push(elem)
+    return acc
+  }, []) : null
+}
 
 // Iteration #6: Find elements
 const wordsFind = ['machine', 'subset', 'trouble', 'starting', 'matter', 'eating', 'truth', 'disobedience'];
 
-function doesWordExist() {}
+function doesWordExist(array, word) {
+  return array != 0 ? array.includes(word) : null
+}
 
 
 
@@ -78,9 +100,11 @@ const wordsCount = [
   'truth',
   'disobedience',
   'matter'
-];
+]
 
-function howManyTimes() {}
+function howManyTimes(array, word) {
+  return array != 0 ? array.filter(elem => elem === word).length : 0
+}
 
 
 
@@ -107,10 +131,43 @@ const matrix = [
   [20, 73, 35, 29, 78, 31, 90, 1, 74, 31, 49, 71, 48, 86, 81, 16, 23, 57, 5, 54],
   [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]
 ];
-
-function greatestProduct() {}
-
-
+// i son las filas y j las columnas
+function greatestProduct(matrix) {
+  // Variable que tendra el resultado del mayor producto de 4 numeros
+  let greatest = 0
+  // Accediendo a las filas, osea los arreglos de numeros, asegurandome que no acceda a las ultimas 3 filas para que pueda aplicar la logica de sumas que esta mas abajo
+  for(let i = 0; i < matrix.length; i++) {
+    // Accediendo a cada numero(columna) dependiendo de la fila en la que este, como ya me asegure de no tocar las ultimas filas tengo que necesariamente comparar las multiplicaciones de todas las lineas verticakles
+    for(let j = 0 ; j < matrix.length; j++){
+      // Para cuando hay numeros horizontales, verticales y diagonales
+      if (j <= matrix[i].length - 4 && i <= matrix.length - 4) {
+        // Checando a partir de donde me encuentro el producto de todas las lieneas verticales
+        const vertical = matrix[i][j] * matrix[i + 1][j] * matrix[i + 2][j] * matrix[i + 3][j]
+        // Checando a partir de donde me encuentre iterando el producto de los numeros en horizontal, asegurandome que siempre tenga numeros a la derecha que sumar
+        const horizontal = matrix[i][j] * matrix[i][j + 1] * matrix[i][j + 2] * matrix[i][j + 3]
+        // Usando la funcion para obtener el maximo de dos numeros vertical y horizontal
+        const maxOfTwoHV = maxOfTwoNumbers(horizontal, vertical)
+        // Obteniendo la linea en diagonal
+        const diagonal = matrix[i][j] * matrix[i + 1][j + 1] * matrix[i + 2][j + 2] * matrix[i + 3][j + 3]
+        const maxOfDHV = maxOfTwoNumbers(maxOfTwoHV, diagonal)
+        // Revisando si en mi acomulador hay un numero mas crande o no de ser el caso se reasigna el valor
+        if (maxOfDHV > greatest)greatest = maxOfDHV
+      }
+      // Para cuando solo hay verticales
+      else if (i <= matrix.length - 4) {
+        // Este else if es para que apesar de que en un punto me quedo sin numeros horizontales tengo que seguir revisando si hay alguna multiplicacion mas grande con las columnas horizontales que quedan
+        const vertical = matrix[i][j] * matrix[i + 1][j] * matrix[i + 2][j] * matrix[i + 3][j]
+        if (vertical > greatest) greatest = vertical
+      }
+      // Para cuanddo solo quedan horizontales
+      else {
+        const horizontal = matrix[i][j] * matrix[i][j + 1] * matrix[i][j + 2] * matrix[i][j + 3]
+        if (horizontal > greatest) greatest = horizontal
+      }
+    }
+  }
+  return greatest
+}
 
 
 // The following is required to make unit tests work.
