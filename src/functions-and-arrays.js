@@ -153,14 +153,14 @@ function greatestProduct(matrix) {
         // Revisando si en mi acomulador hay un numero mas crande o no de ser el caso se reasigna el valor
         if (maxOfDHV > greatest)greatest = maxOfDHV
       }
-      // Para cuando solo hay verticales
+      // Para cuando solo hay verticales, es importante primero revisar cuando aun hay verticales y no al revez
       else if (i <= matrix.length - 4) {
         // Este else if es para que apesar de que en un punto me quedo sin numeros horizontales tengo que seguir revisando si hay alguna multiplicacion mas grande con las columnas horizontales que quedan
         const vertical = matrix[i][j] * matrix[i + 1][j] * matrix[i + 2][j] * matrix[i + 3][j]
         if (vertical > greatest) greatest = vertical
       }
-      // Para cuanddo solo quedan horizontales
-      else {
+      // Para cuanddo solo quedan horizontales, use un if else en vez de un else para evitar pultiplicar numeros que no existen en el arreglo y no obtener NaN
+      else if (j <= matrix[i].length - 4){
         const horizontal = matrix[i][j] * matrix[i][j + 1] * matrix[i][j + 2] * matrix[i][j + 3]
         if (horizontal > greatest) greatest = horizontal
       }
@@ -168,7 +168,6 @@ function greatestProduct(matrix) {
   }
   return greatest
 }
-
 
 // The following is required to make unit tests work.
 /* Environment setup. Do not modify the below code. */
